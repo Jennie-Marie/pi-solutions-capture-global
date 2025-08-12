@@ -206,35 +206,6 @@
             </div>
 
             <form id="solutionsForm">
-                <div class="section-title">Basic Information</div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="fpiAgent">FPI Agent</label>
-                        <input type="text" id="fpiAgent" name="fpiAgent">
-                    </div>
-                    <div class="form-group">
-                        <label for="status">Status</label>
-                        <select id="status" name="status">
-                            <option value="">Select status...</option>
-                            <option value="Research Only">Research Only</option>
-                            <option value="Research Incomplete">Research Incomplete</option>
-                            <option value="Contact Made">Contact Made</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="solutionId">Solution ID</label>
-                        <input type="text" id="solutionId" name="solutionId" placeholder="e.g., CompanyName001">
-                    </div>
-                    <div class="form-group">
-                        <label for="dateOfContact">Date of Contact</label>
-                        <input type="date" id="dateOfContact" name="dateOfContact">
-                    </div>
-                </div>
-
                 <div class="section-title">Company Details</div>
 
                 <div class="form-row">
@@ -477,10 +448,6 @@
             
             // Convert form data to object with exact field names
             const fieldMapping = {
-                'fpiAgent': 'FPI Agent',
-                'status': 'Status',
-                'solutionId': 'Solution ID',
-                'dateOfContact': 'Date of contact',
                 'companyName': 'Company name',
                 'companyLocation': 'Company location',
                 'website': 'Website',
@@ -516,6 +483,12 @@
             for (const [formField, dbField] of Object.entries(fieldMapping)) {
                 data[dbField] = formData.get(formField) || null;
             }
+
+            // Set internal fields that aren't user-facing
+            data['FPI Agent'] = null; // Internal use only
+            data['Status'] = 'Research Only'; // Default status for external submissions  
+            data['Solution ID'] = null; // Will be assigned internally
+            data['Date of contact'] = null; // Will be set internally
 
             // Handle checkboxes specifically
             data['Do they have data they can share?'] = formData.has('hasData') ? 'Yes' : null;
