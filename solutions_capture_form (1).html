@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solutions Database - PI Initiative</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c5530 0%, #4a7c59 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .form-section {
+            padding: 40px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: #2c5530;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e1e8ed;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4a7c59;
+            box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.1);
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row, .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #4a7c59 0%, #2c5530 100%);
+            color: white;
+            padding: 16px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(74, 124, 89, 0.3);
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(74, 124, 89, 0.4);
+        }
+
+        .organization-tags {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 3px;
+            font-weight: 500;
+        }
+
+        .success-message, .error-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌱 Solution Providers Database</h1>
+            <p>PI Initiative - Partner Solutions Data Capture</p>
+        </div>
+
+        <div class="form-section">
+            <div class="organization-tags">
+                <h3 style="margin-bottom: 15px; color: #333;">Source Organizations:</h3>
+                <span class="tag">Earthshot Prize</span>
+                <span class="tag">ChangeNow</span>
+                <span class="tag">LCW</span>
+                <span class="tag">NYCW</span>
+                <span class="tag">Unitec Alumni</span>
+                <span class="tag">Climate Collective</span>
+                <span class="tag">Climate KIC</span>
+                <span class="tag">UNGC</span>
+                <span class="tag">MCJ Collective</span>
+                <span class="tag">Crunchbase</span>
+                <span class="tag">4WardVC</span>
+                <span class="tag">ClimateEU</span>
+            </div>
+
+            <form id="solutionsForm">
+                <div class="section-title">Company Details</div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="companyName">Company Name <span class="required">*</span></label>
+                        <input type="text" id="companyName" name="companyName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="companyLocation">Company Location</label>
+                        <input type="text" id="companyLocation" name="companyLocation" placeholder="Country or City, Country">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="website">Website</label>
+                    <input type="url" id="website" name="website" placeholder="https://...">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="contactPerson">Contact Person</label>
+                        <input type="text" id="contactPerson" name="contactPerson">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactDetails">Contact Details</label>
+                        <input type="text" id="contactDetails" name="contactDetails" placeholder="Email, phone, or LinkedIn">
+                    </div>
+                </div>
+
+                <div class="section-title">Solution Classification</div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="industryVerticals">Industry Verticals</label>
+                        <select id="industryVerticals" name="industryVerticals">
+                            <option value="">Select primary vertical...</option>
+                            <option value="Air-based solutions">Air-based solutions</option>
+                            <option value="Buildings">Buildings</option>
+                            <option value="Electricity Production">Electricity Production</option>
+                            <option value="Food Systems">Food Systems</option>
+                            <option value="Industy">Industry</option>
+                            <option value="Land-based solutions">Land-based solutions</option>
+                            <option value="Transportation">Transportation</option>
+                            <option value="Water-based solutions">Water-based solutions</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="industryVerticals1">Industry Verticals (Secondary)</label>
+                        <select id="industryVerticals1" name="industryVerticals1">
+                            <option value="">Select secondary vertical...</option>
+                            <option value="Buildings">Buildings</option>
+                            <option value="Carbon Credits">Carbon Credits</option>
+                            <option value="Electricity Production">Electricity Production</option>
+                            <option value="Food Systems">Food Systems</option>
+                            <option value="Industy">Industry</option>
+                            <option value="Land-based solutions">Land-based solutions</option>
+                            <option value="Water-based solutions">Water-based solutions</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="solutionAction">Solution Action</label>
+                        <input type="text" id="solutionAction" name="solutionAction">
+                    </div>
+                    <div class="form-group">
+                        <label for="solutionTypes">Solution Types</label>
+                        <select id="solutionTypes" name="solutionTypes">
+                            <option value="">Select solution type...</option>
+                            <option value="Direct Air Capture">Direct Air Capture</option>
+                            <option value="Carbon Capture for Shipping">Carbon Capture for Shipping</option>
+                            <option value="Carbon Storage">Carbon Storage</option>
+                            <option value="NET Power">NET Power</option>
+                            <option value="Solar Energy">Solar Energy</option>
+                            <option value="Sustainable Food">Sustainable Food</option>
+                            <option value="Coastal Restoration, ecosystems management">Coastal Restoration, ecosystems management</option>
+                            <option value="Waste collection and recycling">Waste collection and recycling</option>
+                            <option value="Crop Disease Detection">Crop Disease Detection</option>
+                            <option value="Leak prevention">Leak prevention</option>
+                            <option value="Multiple">Multiple</option>
+                            <option value="Multiple Solution Provider">Multiple Solution Provider</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="descriptionOfSolution">Description of the Solution <span class="required">*</span></label>
+                    <textarea id="descriptionOfSolution" name="descriptionOfSolution" required placeholder="Describe how the solution works and its climate impact..."></textarea>
+                </div>
+
+                <div class="section-title">Deployment Information</div>
+
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label for="numberOfDeployments">Number of Existing Deployments</label>
+                        <input type="text" id="numberOfDeployments" name="numberOfDeployments">
+                    </div>
+                    <div class="form-group">
+                        <label for="locationOfDeployments">Location of Existing Deployments</label>
+                        <input type="text" id="locationOfDeployments" name="locationOfDeployments">
+                    </div>
+                    <div class="form-group">
+                        <label for="deploymentName">Deployment Name</label>
+                        <input type="text" id="deploymentName" name="deploymentName">
+                    </div>
+                </div>
+
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label for="capexCost">Deployment CAPEX Cost</label>
+                        <input type="text" id="capexCost" name="capexCost" placeholder="e.g., $1M, €500K">
+                    </div>
+                    <div class="form-group">
+                        <label for="opexCost">Deployment OPEX Cost</label>
+                        <input type="text" id="opexCost" name="opexCost" placeholder="e.g., $100K/year">
+                    </div>
+                    <div class="form-group">
+                        <label for="timeToDeploy">Time to Deploy</label>
+                        <input type="text" id="timeToDeploy" name="timeToDeploy" placeholder="e.g., 6 months, 2 years">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="infrastructureNeeded">Infrastructure Needed to Deploy</label>
+                    <textarea id="infrastructureNeeded" name="infrastructureNeeded" placeholder="Describe infrastructure requirements..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Do they have data they can share?</label>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="hasData" name="hasData" value="Yes">
+                            <label for="hasData">Yes, they have shareable data</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Do they have an API?</label>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="hasApi" name="hasApi" value="Yes">
+                            <label for="hasApi">Yes, they have an API</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="startDate">Start Date of Implementation</label>
+                        <input type="date" id="startDate" name="startDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate">End Date of Implementation</label>
+                        <input type="date" id="endDate" name="endDate">
+                    </div>
+                </div>
+
+                <div class="section-title">Context & Impact</div>
+
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label for="settlementSize">Settlement Size</label>
+                        <select id="settlementSize" name="settlementSize">
+                            <option value="">Select size...</option>
+                            <option value="Isolated house(s)/ farm(s)">Isolated house(s)/ farm(s)</option>
+                            <option value="Town">Town</option>
+                            <option value="City">City</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="populationSize">Population Size</label>
+                        <select id="populationSize" name="populationSize">
+                            <option value="">Select population...</option>
+                            <option value="pop.<1000">pop. < 1,000</option>
+                            <option value="10K<pop.<100K">10K < pop. < 100K</option>
+                            <option value="100K<pop.<1M">100K < pop. < 1M</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="populationDensity">Population Density</label>
+                        <input type="text" id="populationDensity" name="populationDensity" placeholder="e.g., people/km²">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="typeOfClimate">Type of Climate</label>
+                        <select id="typeOfClimate" name="typeOfClimate">
+                            <option value="">Select climate type...</option>
+                            <option value="Sub-Polar">Sub-Polar</option>
+                            <option value="Temperate">Temperate</option>
+                            <option value="Sub-Tropical">Sub-Tropical</option>
+                            <option value="all?">All climates</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="otherClimateVerticals">Other Climate Verticals Impacted</label>
+                        <input type="text" id="otherClimateVerticals" name="otherClimateVerticals">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="resultsOverview">Results Overview</label>
+                        <textarea id="resultsOverview" name="resultsOverview" placeholder="e.g., CO2 captured per year, energy produced, etc."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="socioEconomicImpact">Socio-economic Impact</label>
+                        <textarea id="socioEconomicImpact" name="socioEconomicImpact" placeholder="e.g., jobs created, economic benefits"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="terraContact">Terra Contact</label>
+                    <input type="text" id="terraContact" name="terraContact">
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    Submit Solution Data
+                </button>
+
+                <div id="successMessage" class="success-message">
+                    ✅ Solution data submitted successfully!
+                </div>
+
+                <div id="errorMessage" class="error-message">
+                    ❌ Error submitting data. Please try again.
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('solutionsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = new FormData(e.target);
+            const data = {};
+            
+            // Convert form data to object with exact field names
+            const fieldMapping = {
+                'companyName': 'Company name',
+                'companyLocation': 'Company location',
+                'website': 'Website',
+                'contactPerson': 'Contact person',
+                'contactDetails': 'Contact details',
+                'industryVerticals': 'Industry verticals',
+                'industryVerticals1': 'Industry verticals_1',
+                'solutionAction': 'Solution action',
+                'solutionTypes': 'Solution types',
+                'descriptionOfSolution': 'Description of the solution',
+                'numberOfDeployments': 'Number of existing deployments',
+                'locationOfDeployments': 'Location of existing deployments',
+                'deploymentName': 'Deployment name',
+                'capexCost': 'Deployment CAPEX cost',
+                'opexCost': 'Deployment OPEX cost',
+                'timeToDeploy': 'Time to deploy',
+                'infrastructureNeeded': 'Infrastructure needed to deploy',
+                'hasData': 'Do they have data they can share?',
+                'hasApi': 'Do they have an API?',
+                'startDate': 'Start date of implementation',
+                'endDate': 'End date of implementation',
+                'settlementSize': 'Settlement size',
+                'populationSize': 'Population size',
+                'populationDensity': 'Population density',
+                'typeOfClimate': 'Type of climate',
+                'otherClimateVerticals': 'Other climate verticals impacted',
+                'resultsOverview': 'Results overview',
+                'socioEconomicImpact': 'Socio-economic impact',
+                'terraContact': 'Terra contact'
+            };
+
+            // Map form fields to database field names
+            for (const [formField, dbField] of Object.entries(fieldMapping)) {
+                data[dbField] = formData.get(formField) || null;
+            }
+
+            // Set internal fields that aren't user-facing
+            data['FPI Agent'] = null; // Internal use only
+            data['Status'] = 'Research Only'; // Default status for external submissions  
+            data['Solution ID'] = null; // Will be assigned internally
+            data['Date of contact'] = null; // Will be set internally
+
+            // Handle checkboxes specifically
+            data['Do they have data they can share?'] = formData.has('hasData') ? 'Yes' : null;
+            data['Do they have an API?'] = formData.has('hasApi') ? 'Yes' : null;
+            
+            console.log('Formatted data for Airtable:', data);
+            
+            // Show success message
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+            
+            // Reset form after delay
+            setTimeout(() => {
+                e.target.reset();
+                document.getElementById('successMessage').style.display = 'none';
+            }, 3000);
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Auto-generate Solution ID based on company name (removed since field no longer exists)
+        // document.getElementById('companyName').addEventListener('input', function(e) {
+        //     const companyName = e.target.value;
+        //     if (companyName) {
+        //         const solutionId = companyName.replace(/[^a-zA-Z0-9]/g, '').substring(0, 8) + '001';
+        //         document.getElementById('solutionId').value = solutionId;
+        //     }
+        // });
+    </script>
+</body>
+</html>
